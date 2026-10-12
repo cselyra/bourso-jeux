@@ -41,7 +41,7 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
         reserved ? 'shadow-box-sm' : 'hover:-translate-x-0.5 hover:-translate-y-1 hover:shadow-box-lg',
       )}
     >
-      <div className="relative aspect-[4/3] overflow-hidden border-b-2 border-ink">
+      <div className="relative h-[19rem] overflow-hidden border-b-2 border-ink bg-paper">
         <div className={cn('absolute inset-0 transition duration-300', reserved && 'opacity-40')}>
           <GameCover game={game} />
         </div>

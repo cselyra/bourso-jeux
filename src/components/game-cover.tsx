@@ -22,14 +22,17 @@ export function GameCover({ game }: { game: Game }) {
   const [failed, setFailed] = useState(false)
 
   if (src && !failed) {
+    // Zone blanche, photo entière : 280 × 280 px au plus, proportions conservées
     return (
-      <img
-        src={src}
-        alt=""
-        loading="lazy"
-        onError={() => setFailed(true)}
-        className="size-full bg-paper object-contain p-3"
-      />
+      <div className="flex size-full items-center justify-center bg-paper">
+        <img
+          src={src}
+          alt=""
+          loading="lazy"
+          onError={() => setFailed(true)}
+          className="h-auto max-h-[280px] w-auto max-w-[280px] object-contain"
+        />
+      </div>
     )
   }
 
