@@ -97,11 +97,15 @@ export function createPayzenProvider(config: PayzenConfig): PaymentProvider {
       const answer = form.get('kr-answer')
       const hash = form.get('kr-hash')
       // Une IPN est signée avec le mot de passe ; « sha256_hmac » désigne le retour navigateur, qu'on n'accepte pas ici.
-      if (typeof answer !== 'string' || typeof hash !== 'string' || form.get('kr-hash-key') !== 'password') {
-        throw new WebhookRejected('notification PayZen mal formée')
+      if (typeof answer !== 'string' || typeof hash !== 'string') {
+        const fields = [...form.keys()].join(', ') || 'aucun'
+        throw new WebhookRejected(`format inattendu : kr-answer ou kr-hash absent (champs reçus : ${fields}). L'URL doit être déclarée dans la section API REST.`)
+      }
+      if (form.get('kr-hash-key') !== 'password') {
+        throw new WebhookRejected(`kr-hash-key = ${String(form.get('kr-hash-key'))} : seule une IPN signée avec le mot de passe est acceptée`)
       }
       if (!timingSafeEqual(await hmacSha256Hex(config.password, answer), hash.toLowerCase())) {
-        throw new WebhookRejected('signature PayZen invalide')
+        throw new WebhookRejected('signature incorrecte : le mot de passe configuré (test ou production) ne correspond pas à celui qui a signé')
       }
 
       const data = JSON.parse(answer)

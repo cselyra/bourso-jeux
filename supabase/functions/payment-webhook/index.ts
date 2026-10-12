@@ -22,7 +22,8 @@ Deno.serve(async (request) => {
   } catch (cause) {
     if (cause instanceof WebhookRejected) {
       console.warn('webhook rejeté :', cause.message)
-      return new Response('invalid signature', { status: 401 })
+      // Le motif précis apparaît dans le journal des notifications du prestataire
+      return new Response(`rejected: ${cause.message}`, { status: 401 })
     }
     throw cause
   }
