@@ -115,7 +115,8 @@ async function readInventory(path) {
       max_players: number(read('max_players')),
       duration_min: number(read('duration_min')),
       age_min: number(read('age_min')),
-      price_cents: cents(number(read('price'))),
+      // Le prix de vente est arrondi à l'euro
+      price_cents: number(read('price')) == null ? null : Math.round(number(read('price'))) * 100,
       price_new_cents: cents(number(read('price_new'))),
       condition: null,
     }
@@ -203,11 +204,6 @@ if (!('condition' in columns)) console.log('Pas de colonne « État » : l’ét
 if (skipped.length) {
   console.log(`\n${skipped.length} ligne(s) ignorée(s), à compléter dans le fichier :`)
   for (const line of skipped) console.log(`  ligne ${line.row} · ${line.title} : ${line.problems.join(', ')}`)
-}
-const odd = [...new Map(games.filter((g) => g.price_cents % 50 !== 0).map((g) => [g.imageKey, g])).values()]
-if (odd.length) {
-  console.log(`\n${odd.length} prix de vente ne tombent pas rond (à 50 centimes près) :`)
-  console.log('  ' + odd.map((g) => `${g.title} ${(g.price_cents / 100).toFixed(2)} €`).join(' · '))
 }
 const above = [...new Map(games.filter((g) => g.price_new_cents != null && g.price_cents > g.price_new_cents).map((g) => [g.imageKey, g])).values()]
 if (above.length) console.log(`\nPrix de vente supérieur au prix neuf : ${above.map((g) => g.title).join(', ')}`)
