@@ -13,6 +13,9 @@ export interface PayzenConfig {
   password: string
   // Clé publique du formulaire embarqué (« shopId:testpublickey_… »)
   publicKey: string
+  // Clé de la boutique (« clé de test » / « clé de production ») : elle signe les notifications
+  // des paiements faits sur la page hébergée, donc indispensable en mode lien.
+  formKey?: string
   apiEndpoint?: string
   staticEndpoint?: string
 }
@@ -33,6 +36,55 @@ function timingSafeEqual(a: string, b: string) {
   let diff = 0
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i)
   return diff === 0
+}
+
+async function hmacSha256Base64(key: string, message: string) {
+  const cryptoKey = await crypto.subtle.importKey('raw', encoder.encode(key), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
+  const signature = new Uint8Array(await crypto.subtle.sign('HMAC', cryptoKey, encoder.encode(message)))
+  return btoa(String.fromCharCode(...signature))
+}
+
+async function sha1Hex(message: string) {
+  const digest = new Uint8Array(await crypto.subtle.digest('SHA-1', encoder.encode(message)))
+  return Array.from(digest, (byte) => byte.toString(16).padStart(2, '0')).join('')
+}
+
+const FORM_STATUS: Record<string, PaymentEvent['status']> = {
+  AUTHORISED: 'paid',
+  CAPTURED: 'paid',
+  ACCEPTED: 'paid',
+  REFUSED: 'failed',
+  ABANDONED: 'failed',
+  CANCELLED: 'failed',
+  EXPIRED: 'failed',
+}
+
+// Notification au format de l'API formulaire : la signature porte sur les valeurs des champs
+// vads_*, triés par nom et joints par « + », suivis de la clé de la boutique.
+async function parseFormNotification(form: FormData, formKey: string | undefined): Promise<PaymentEvent> {
+  if (!formKey) {
+    throw new WebhookRejected('notification au format formulaire (lien de paiement) reçue, mais le secret PAYZEN_FORM_KEY n’est pas défini')
+  }
+  const fields: Record<string, string> = {}
+  for (const [name, value] of form.entries()) {
+    if (name.startsWith('vads_') && typeof value === 'string') fields[name] = value
+  }
+  const message = [...Object.keys(fields).sort().map((name) => fields[name]), formKey].join('+')
+  const received = String(form.get('signature'))
+  // Selon le réglage de la boutique : HMAC-SHA-256 en base64, ou SHA-1 en hexadécimal (ancien)
+  const expected = /^[0-9a-f]{40}$/i.test(received) ? await sha1Hex(message) : await hmacSha256Base64(formKey, message)
+  if (!timingSafeEqual(expected, /^[0-9a-f]{40}$/i.test(received) ? received.toLowerCase() : received)) {
+    throw new WebhookRejected('signature incorrecte (format formulaire) : PAYZEN_FORM_KEY ne correspond pas à la clé de la boutique (test ou production)')
+  }
+
+  const amount = Number.parseInt(fields.vads_amount ?? '', 10)
+  return {
+    orderId: fields.vads_order_id ?? '',
+    transactionId: fields.vads_trans_uuid ?? '',
+    status: FORM_STATUS[fields.vads_trans_status] ?? 'pending',
+    amountCents: Number.isFinite(amount) ? amount : null,
+    raw: fields,
+  }
 }
 
 const STATUS: Record<string, PaymentEvent['status']> = {
@@ -86,6 +138,8 @@ export function createPayzenProvider(config: PayzenConfig): PaymentProvider {
       const answer = await call('Charge/CreatePaymentOrder', {
         ...common,
         channelOptions: { channelType: 'MAIL', mailOptions: { recipient: order.buyerEmail } },
+        // Préremplit l'e-mail sur la page de paiement
+        customer: { email: order.buyerEmail },
         expirationDate: new Date(order.expiresAt.getTime() - LINK_EXPIRY_MARGIN_MS).toISOString().replace(/\.\d{3}Z$/, '+00:00'),
         locale: 'fr_FR',
       })
@@ -94,6 +148,9 @@ export function createPayzenProvider(config: PayzenConfig): PaymentProvider {
 
     async parseWebhook(request: Request): Promise<PaymentEvent> {
       const form = await request.formData()
+      // Un paiement fait sur la page hébergée (lien de paiement) est notifié au format « formulaire ».
+      if (form.has('vads_trans_status') && form.has('signature')) return parseFormNotification(form, config.formKey)
+
       const answer = form.get('kr-answer')
       const hash = form.get('kr-hash')
       // Une IPN est signée avec le mot de passe ; « sha256_hmac » désigne le retour navigateur, qu'on n'accepte pas ici.

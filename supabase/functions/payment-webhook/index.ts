@@ -22,7 +22,14 @@ Deno.serve(async (request) => {
   } catch (cause) {
     if (cause instanceof WebhookRejected) {
       console.warn('webhook rejeté :', cause.message)
-      // Le motif précis apparaît dans le journal des notifications du prestataire
+      // Trace en base : un rejet est souvent un paiement réel que l'on n'a pas su lire.
+      await adminClient().from('payment_events').insert({
+        provider: provider.name,
+        transaction_id: `rejet-${crypto.randomUUID()}`,
+        status: 'rejected',
+        payload: { reason: cause.message },
+      })
+      // Le motif précis apparaît aussi dans le journal des notifications du prestataire
       return new Response(`rejected: ${cause.message}`, { status: 401 })
     }
     throw cause

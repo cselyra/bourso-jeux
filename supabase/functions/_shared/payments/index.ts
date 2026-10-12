@@ -14,6 +14,7 @@ const providers: Record<string, () => PaymentProvider> = {
       shopId: required('PAYZEN_SHOP_ID'),
       password: required('PAYZEN_PASSWORD'),
       publicKey: required('PAYZEN_PUBLIC_KEY'),
+      formKey: Deno.env.get('PAYZEN_FORM_KEY'),
       apiEndpoint: Deno.env.get('PAYZEN_API_ENDPOINT'),
       staticEndpoint: Deno.env.get('PAYZEN_STATIC_ENDPOINT'),
     }),

@@ -1,4 +1,4 @@
-import { createHmac } from 'node:crypto'
+import { createHash, createHmac } from 'node:crypto'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { createPayzenProvider } from '../functions/_shared/payments/payzen.ts'
 import { WebhookRejected } from '../functions/_shared/payments/types.ts'
@@ -71,6 +71,59 @@ describe('IPN PayZen', () => {
   })
 })
 
+describe('IPN PayZen au format formulaire (lien de paiement)', () => {
+  const FORM_KEY = 'cle-de-test-1234'
+  const withFormKey = createPayzenProvider({ shopId: '12345678', password: PASSWORD, publicKey: 'x', formKey: FORM_KEY })
+
+  function formIpn(fields: Record<string, string>, { key = FORM_KEY, sha1 = false } = {}) {
+    const message = [...Object.keys(fields).sort().map((name) => fields[name]), key].join('+')
+    const signature = sha1
+      ? createHash('sha1').update(message).digest('hex')
+      : createHmac('sha256', key).update(message).digest('base64')
+    return new Request('https://example.org/payment-webhook/payzen', {
+      method: 'POST',
+      body: new URLSearchParams({ ...fields, signature }),
+    })
+  }
+
+  const fields = {
+    vads_trans_status: 'AUTHORISED',
+    vads_order_id: order.id,
+    vads_amount: '4200',
+    vads_trans_uuid: 'uuid-form-1',
+    vads_cust_email: 'ada@example.org',
+  }
+
+  it('accepte une notification signée en HMAC-SHA-256', async () => {
+    expect(await withFormKey.parseWebhook(formIpn(fields))).toMatchObject({
+      orderId: order.id,
+      transactionId: 'uuid-form-1',
+      status: 'paid',
+      amountCents: 4200,
+    })
+  })
+
+  it('accepte l’ancienne signature SHA-1', async () => {
+    expect((await withFormKey.parseWebhook(formIpn(fields, { sha1: true }))).status).toBe('paid')
+  })
+
+  it('traduit un refus', async () => {
+    expect((await withFormKey.parseWebhook(formIpn({ ...fields, vads_trans_status: 'REFUSED' }))).status).toBe('failed')
+  })
+
+  it('rejette une mauvaise clé ou un montant modifié', async () => {
+    await expect(withFormKey.parseWebhook(formIpn(fields, { key: 'autre' }))).rejects.toBeInstanceOf(WebhookRejected)
+    const request = formIpn(fields)
+    const body = new URLSearchParams(await request.text())
+    body.set('vads_amount', '1')
+    await expect(withFormKey.parseWebhook(new Request(request.url, { method: 'POST', body }))).rejects.toBeInstanceOf(WebhookRejected)
+  })
+
+  it('rejette explicitement si la clé de la boutique n’est pas configurée', async () => {
+    await expect(provider.parseWebhook(formIpn(fields))).rejects.toThrow('PAYZEN_FORM_KEY')
+  })
+})
+
 describe('création du paiement PayZen', () => {
   it('mode lien : crée un ordre de paiement par e-mail qui expire avant la réservation', async () => {
     const fetchMock = stubPayzen({ paymentOrderId: 'po-1', paymentURL: 'https://secure.payzen.eu/t/abc' })
@@ -86,6 +139,7 @@ describe('création du paiement PayZen', () => {
       orderId: order.id,
       ipnTargetUrl: 'https://hook',
       channelOptions: { channelType: 'MAIL', mailOptions: { recipient: 'ada@example.org' } },
+      customer: { email: 'ada@example.org' },
       expirationDate: '2026-10-13T11:50:00+00:00',
       locale: 'fr_FR',
     })
