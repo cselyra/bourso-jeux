@@ -4,6 +4,7 @@ import { CartSheet } from '@/components/cart-sheet'
 import { Toaster } from '@/components/ui/sonner'
 import { useGamesRealtime } from '@/hooks/use-games'
 import { CartProvider } from '@/lib/cart'
+import { pickupWhen, pickupWhere } from '@/lib/pickup'
 import { supabase } from '@/lib/supabase'
 import { CatalogPage } from '@/pages/catalog'
 import { CheckoutPage } from '@/pages/checkout'
@@ -50,7 +51,7 @@ function Layout() {
       </div>
 
       <footer className="border-t-2 border-ink px-4 py-6 text-center text-sm text-muted-foreground">
-        Bourso Jeux · retrait des jeux sur place
+        Bourso jeux · retrait le {pickupWhen} · {pickupWhere}
         {!supabase && <span className="font-semibold text-ink"> · mode démo, données fictives</span>}
       </footer>
     </div>

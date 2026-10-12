@@ -1,4 +1,4 @@
-import { RotateCcw, Search, SlidersHorizontal } from 'lucide-react'
+import { MapPin, RotateCcw, Search, SlidersHorizontal } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useMemo } from 'react'
 import { FiltersPanel } from '@/components/filters-panel'
@@ -13,6 +13,7 @@ import { useGames, useNow } from '@/hooks/use-games'
 import { useCart } from '@/lib/cart'
 import { type SortKey, SORTS, applyFilters, countActive } from '@/lib/filters'
 import { visibleStatus } from '@/lib/games'
+import { pickupWhen, pickupWhere } from '@/lib/pickup'
 
 const GRID = 'grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4'
 
@@ -50,7 +51,13 @@ export function CatalogPage() {
               La bourse aux jeux de société
             </h1>
             <p className="mt-4 max-w-xl text-lg text-white/85">
-              Réservez en ligne, réglez par carte, retirez vos jeux sur place. Premier arrivé, premier servi.
+              Réservez en ligne, réglez par carte, puis venez chercher vos jeux. Premier arrivé, premier servi.
+            </p>
+            <p className="mt-4 inline-flex max-w-xl items-start gap-2 rounded-lg border-2 border-sun px-3 py-2 text-sm">
+              <MapPin className="mt-0.5 size-4 shrink-0 text-sun" aria-hidden="true" />
+              <span>
+                <strong className="font-semibold">Retrait le {pickupWhen}</strong> · {pickupWhere}
+              </span>
             </p>
             {games && (
               <p className="mt-6 flex flex-wrap gap-x-6 gap-y-1 font-semibold" aria-live="polite">

@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { type ComponentType, type ReactNode, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PayzenForm from '@/components/payments/payzen-form'
+import { PickupInfo } from '@/components/pickup-info'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatPrice } from '@/lib/games'
 import { type OrderView, fetchOrder, loadPaymentStart } from '@/lib/orders'
@@ -73,7 +74,8 @@ function Status({ order, token }: { order: OrderView; token: string }) {
     case 'paid':
       return (
         <Panel tone="text-teal" stamp="Payé" title="C'est à vous de jouer !">
-          <p>Votre paiement est bien reçu. Vos jeux vous attendent : le retrait se fait sur place.</p>
+          <p>Votre paiement est bien reçu. Vos jeux vous attendent, venez les chercher :</p>
+          <PickupInfo className="rounded-lg bg-secondary p-3 text-base" />
         </Panel>
       )
     case 'conflict':

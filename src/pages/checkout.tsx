@@ -5,6 +5,7 @@ import { CartLineList, LostGamesAlert } from '@/components/cart-lines'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { PickupInfo } from '@/components/pickup-info'
 import { Label } from '@/components/ui/label'
 import { useCartLines } from '@/hooks/use-cart-lines'
 import { useCart } from '@/lib/cart'
@@ -95,7 +96,7 @@ export function CheckoutPage() {
         <div>
           <h1 className="text-4xl font-extrabold">Réserver mes jeux</h1>
           <p className="mt-2 text-muted-foreground">
-            Vos jeux sont bloqués pour vous dès la validation, le temps de régler par carte. Retrait sur place.
+            Vos jeux sont bloqués pour vous dès la validation, le temps de régler par carte.
           </p>
         </div>
 
@@ -144,6 +145,8 @@ export function CheckoutPage() {
         <p className="font-heading mt-3 flex items-baseline justify-between border-t-2 border-ink pt-3 text-xl font-bold">
           Total <span>{formatPrice(total)}</span>
         </p>
+        <h2 className="mt-5 mb-2 text-base font-bold">Retrait des jeux</h2>
+        <PickupInfo />
       </aside>
     </div>
   )
