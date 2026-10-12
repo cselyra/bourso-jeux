@@ -14,8 +14,8 @@ import {
 } from '@/lib/games'
 
 const conditionTone: Record<GameCondition, string> = {
-  neuf: 'text-teal-deep',
-  comme_neuf: 'text-teal-deep',
+  neuf: 'text-teal',
+  comme_neuf: 'text-teal',
   tres_bon: 'text-ink',
   bon: 'text-ink',
   correct: 'text-muted-foreground',
@@ -40,11 +40,11 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
       )}
     >
       <div className="relative aspect-[4/3] border-b-2 border-ink">
-        <div className={cn('size-full transition duration-300', reserved && 'opacity-75 grayscale')}>
+        <div className={cn('size-full transition duration-300', reserved && 'opacity-40')}>
           <GameCover game={game} />
         </div>
         {reserved && (
-          <span className="stamp absolute bottom-3 left-3 -rotate-6 border-[3px] bg-paper px-2.5 py-1.5 text-sm text-alert">
+          <span className="stamp absolute bottom-3 left-3 -rotate-6 border-[3px] bg-sun px-2.5 py-1.5 text-sm text-ink">
             Réservé
           </span>
         )}

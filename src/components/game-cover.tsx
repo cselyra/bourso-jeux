@@ -4,11 +4,11 @@ import { type Game, imageUrl } from '@/lib/games'
 
 // Couvertures de remplacement tant qu'un jeu n'a pas de photo : [fond, texte]
 const PALETTE: [string, string][] = [
-  ['var(--ink)', '#ffffff'],
+  ['var(--ink)', 'var(--paper)'],
   ['var(--teal)', 'var(--ink)'],
   ['var(--sun)', 'var(--ink)'],
-  ['var(--teal-deep)', '#ffffff'],
-  ['#0a6b94', '#ffffff'],
+  ['var(--ink)', 'var(--sun)'],
+  ['var(--teal)', 'var(--paper)'],
 ]
 
 function hash(text: string) {

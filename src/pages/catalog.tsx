@@ -146,7 +146,7 @@ export function CatalogPage() {
           )}
 
           {isError && (
-            <Alert className="border-2 border-alert">
+            <Alert className="border-2 border-ink">
               <AlertTitle>Impossible de charger les jeux</AlertTitle>
               <AlertDescription className="space-y-2">
                 <p>Vérifiez votre connexion puis réessayez.</p>

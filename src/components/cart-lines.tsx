@@ -8,8 +8,8 @@ import { cn } from '@/lib/utils'
 export function LostGamesAlert({ lost, onRemove }: { lost: CartLine[]; onRemove: (ids: string[]) => void }) {
   if (lost.length === 0) return null
   return (
-    <Alert className="border-2 border-alert bg-alert/10">
-      <TriangleAlert className="text-alert" />
+    <Alert className="border-2 border-ink bg-sun/30">
+      <TriangleAlert className="text-ink" />
       <AlertTitle>{lost.length === 1 ? "Un jeu n'est plus disponible" : `${lost.length} jeux ne sont plus disponibles`}</AlertTitle>
       <AlertDescription className="space-y-2 text-foreground">
         <ul>

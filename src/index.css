@@ -31,9 +31,7 @@
   --color-ink: var(--ink);
   --color-paper: var(--paper);
   --color-teal: var(--teal);
-  --color-teal-deep: var(--teal-deep);
   --color-sun: var(--sun);
-  --color-alert: var(--alert);
 
   /* Ombre dure : la tranche d'une boîte de jeu, comme le contour du logo */
   --shadow-box: 4px 4px 0 0 var(--ink);
@@ -53,28 +51,26 @@
   --teal: #2eb6ab;
   --sun: #f5d248;
 
-  /* Dérivées : le turquoise de la charte est trop clair pour du texte sur fond blanc */
-  --teal-deep: #147a72;
-  --alert: #c8402f;
   --paper: #ffffff;
 
-  --background: #f3f7f8;
+  /* Tout le reste dérive du bleu de la charte, éclairci avec du blanc : aucune autre teinte */
+  --background: color-mix(in srgb, var(--ink) 4%, white);
   --foreground: var(--ink);
   --card: var(--paper);
   --card-foreground: var(--ink);
   --popover: var(--paper);
   --popover-foreground: var(--ink);
   --primary: var(--ink);
-  --primary-foreground: #ffffff;
-  --secondary: #e3eef1;
+  --primary-foreground: var(--paper);
+  --secondary: color-mix(in srgb, var(--ink) 9%, white);
   --secondary-foreground: var(--ink);
-  --muted: #e3eef1;
-  --muted-foreground: #47707f;
+  --muted: color-mix(in srgb, var(--ink) 9%, white);
+  --muted-foreground: color-mix(in srgb, var(--ink) 72%, white);
   --accent: var(--sun);
   --accent-foreground: var(--ink);
-  --destructive: var(--alert);
-  --border: #c7dae0;
-  --input: #a9c5cd;
+  --destructive: var(--ink);
+  --border: color-mix(in srgb, var(--ink) 20%, white);
+  --input: color-mix(in srgb, var(--ink) 35%, white);
   --ring: var(--teal);
   --radius: 0.75rem;
 }
@@ -106,4 +102,9 @@
 @utility stamp {
   @apply inline-flex items-center rounded-sm border-2 border-current px-1.5 py-0.5 text-[0.68rem] leading-none font-bold tracking-[0.12em] uppercase;
   mask-image: radial-gradient(circle at 30% 40%, #000 60%, rgb(0 0 0 / 0.72) 100%);
+}
+
+/* Bouton de paiement PayZen aux couleurs de la charte */
+.kr-smart-form .kr-payment-button {
+  background-color: var(--ink) !important;
 }

@@ -103,7 +103,7 @@ export function CheckoutPage() {
         <LostGamesAlert lost={lost} onRemove={(ids) => cart.remove(...ids)} />
 
         {error && (
-          <Alert className="border-2 border-alert bg-alert/10">
+          <Alert className="border-2 border-ink bg-sun/30">
             <AlertTitle>Réservation non enregistrée</AlertTitle>
             <AlertDescription className="text-foreground">{ERRORS[error]}</AlertDescription>
           </Alert>
@@ -135,7 +135,7 @@ export function CheckoutPage() {
         >
           {cart.checkingOut ? 'Réservation en cours…' : `Valider la réservation · ${formatPrice(total)}`}
         </Button>
-        {!supabase && <p className="text-center text-sm text-alert">Réservation indisponible en mode démo.</p>}
+        {!supabase && <p className="text-center text-sm text-ink">Réservation indisponible en mode démo.</p>}
       </form>
 
       <aside className="h-fit rounded-xl border-2 border-ink bg-secondary p-5">

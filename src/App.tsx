@@ -21,7 +21,10 @@ function Layout() {
         <div className="mx-auto flex h-16 max-w-[96rem] items-center justify-between px-4 sm:px-6">
           <Link to="/" className="font-heading flex items-center gap-2.5 text-2xl font-semibold tracking-tight">
             <img src={`${import.meta.env.BASE_URL}logo-mark.png`} alt="" width={180} height={160} className="h-11 w-auto" />
-            Bourso jeux
+            <span>
+              Bourso jeux
+              <span className="ml-2.5 hidden border-l-2 border-teal pl-2.5 text-lg font-medium text-teal sm:inline">CSE Lyra</span>
+            </span>
           </Link>
           <CartSheet />
         </div>
@@ -48,7 +51,7 @@ function Layout() {
 
       <footer className="border-t-2 border-ink px-4 py-6 text-center text-sm text-muted-foreground">
         Bourso Jeux · retrait des jeux sur place
-        {!supabase && <span className="font-semibold text-alert"> · mode démo, données fictives</span>}
+        {!supabase && <span className="font-semibold text-ink"> · mode démo, données fictives</span>}
       </footer>
     </div>
   )
