@@ -81,8 +81,8 @@ export function CheckoutPage() {
   if (loaded && lines.length === 0 && !cart.checkingOut) {
     return (
       <div className="px-4 py-24 text-center">
-        <h1 className="text-4xl font-black">Votre panier est vide</h1>
-        <Link to="/" className="mt-4 inline-block font-semibold text-felt underline underline-offset-4">
+        <h1 className="text-4xl font-extrabold">Votre panier est vide</h1>
+        <Link to="/" className="mt-4 inline-block font-semibold text-ink underline underline-offset-4">
           Retour au catalogue
         </Link>
       </div>
@@ -93,7 +93,7 @@ export function CheckoutPage() {
     <div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_22rem]">
       <form onSubmit={submit} className="space-y-6">
         <div>
-          <h1 className="text-4xl font-black">Réserver mes jeux</h1>
+          <h1 className="text-4xl font-extrabold">Réserver mes jeux</h1>
           <p className="mt-2 text-muted-foreground">
             Vos jeux sont bloqués pour vous dès la validation, le temps de régler par carte. Retrait sur place.
           </p>
@@ -103,7 +103,7 @@ export function CheckoutPage() {
         <LostGamesAlert lost={lost} onRemove={(ids) => cart.remove(...ids)} />
 
         {error && (
-          <Alert className="border-2 border-meeple bg-meeple/10">
+          <Alert className="border-2 border-alert bg-alert/10">
             <AlertTitle>Réservation non enregistrée</AlertTitle>
             <AlertDescription className="text-foreground">{ERRORS[error]}</AlertDescription>
           </Alert>
@@ -135,7 +135,7 @@ export function CheckoutPage() {
         >
           {cart.checkingOut ? 'Réservation en cours…' : `Valider la réservation · ${formatPrice(total)}`}
         </Button>
-        {!supabase && <p className="text-center text-sm text-meeple">Réservation indisponible en mode démo.</p>}
+        {!supabase && <p className="text-center text-sm text-alert">Réservation indisponible en mode démo.</p>}
       </form>
 
       <aside className="h-fit rounded-xl border-2 border-ink bg-secondary p-5">

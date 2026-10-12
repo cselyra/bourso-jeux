@@ -42,25 +42,36 @@ export function CatalogPage() {
 
   return (
     <>
-      <section className="felt-texture border-b-2 border-ink bg-felt text-primary-foreground">
-        <div className="mx-auto max-w-[96rem] px-4 py-10 sm:px-6 sm:py-14">
-          <p className="stamp mb-4 -rotate-2 text-mustard">Jeux d'occasion</p>
-          <h1 className="max-w-3xl text-4xl leading-[1.05] font-black text-balance sm:text-6xl">
-            La bourse aux jeux de société
-          </h1>
-          <p className="mt-4 max-w-xl text-lg text-primary-foreground/85">
-            Réservez en ligne, réglez par carte, retirez vos jeux sur place. Premier arrivé, premier servi.
-          </p>
-          {games && (
-            <p className="mt-6 flex flex-wrap gap-x-6 gap-y-1 font-semibold" aria-live="polite">
-              <span>
-                <span className="font-heading text-2xl font-black text-mustard">{counts.available}</span> disponibles
-              </span>
-              <span>
-                <span className="font-heading text-2xl font-black text-mustard">{counts.reserved}</span> réservés
-              </span>
+      <section className="dot-texture overflow-hidden border-b-2 border-ink bg-ink text-white">
+        <div className="mx-auto flex max-w-[96rem] items-center justify-between gap-10 px-4 py-10 sm:px-6 sm:py-14">
+          <div>
+            <p className="stamp mb-4 -rotate-2 text-sun">Jeux d'occasion</p>
+            <h1 className="max-w-3xl text-4xl leading-[1.05] font-extrabold text-balance sm:text-6xl">
+              La bourse aux jeux de société
+            </h1>
+            <p className="mt-4 max-w-xl text-lg text-white/85">
+              Réservez en ligne, réglez par carte, retirez vos jeux sur place. Premier arrivé, premier servi.
             </p>
-          )}
+            {games && (
+              <p className="mt-6 flex flex-wrap gap-x-6 gap-y-1 font-semibold" aria-live="polite">
+                <span>
+                  <span className="font-heading text-2xl font-extrabold text-sun">{counts.available}</span> disponibles
+                </span>
+                <span>
+                  <span className="font-heading text-2xl font-extrabold text-sun">{counts.reserved}</span> réservés
+                </span>
+              </p>
+            )}
+          </div>
+
+          {/* Le logo sur une tuile blanche, entouré des carrés arrondis de l'identité du CSE */}
+          <div className="relative mr-6 hidden shrink-0 md:block" aria-hidden="true">
+            <div className="absolute -top-5 -left-9 size-44 -rotate-12 rounded-3xl bg-sun" />
+            <div className="absolute -right-8 -bottom-6 size-44 rotate-12 rounded-3xl bg-teal" />
+            <div className="relative rotate-2 rounded-3xl bg-white p-6 shadow-[6px_6px_0_0_rgb(0_0_0/0.25)]">
+              <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" width={841} height={921} className="h-56 w-auto" />
+            </div>
+          </div>
         </div>
       </section>
 
@@ -135,7 +146,7 @@ export function CatalogPage() {
           )}
 
           {isError && (
-            <Alert className="border-2 border-meeple">
+            <Alert className="border-2 border-alert">
               <AlertTitle>Impossible de charger les jeux</AlertTitle>
               <AlertDescription className="space-y-2">
                 <p>Vérifiez votre connexion puis réessayez.</p>

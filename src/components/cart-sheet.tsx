@@ -36,7 +36,7 @@ export function CartSheet() {
         render={
           <button
             type="button"
-            className="relative flex h-10 items-center gap-2 rounded-lg border-2 border-ink bg-mustard px-3 text-sm font-bold shadow-box-sm transition outline-none hover:-translate-y-0.5 hover:shadow-box focus-visible:ring-3 focus-visible:ring-ring/50"
+            className="relative flex h-10 items-center gap-2 rounded-lg border-2 border-ink bg-sun px-3 text-sm font-bold shadow-box-sm transition outline-none hover:-translate-y-0.5 hover:shadow-box focus-visible:ring-3 focus-visible:ring-ring/50"
           />
         }
       >

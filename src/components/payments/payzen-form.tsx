@@ -74,7 +74,7 @@ export default function PayzenForm({ client, onSubmitted }: PayzenFormProps) {
         </div>
       </div>
       {error && (
-        <p role="alert" className="text-sm font-medium text-meeple">
+        <p role="alert" className="text-sm font-medium text-alert">
           {error}
         </p>
       )}

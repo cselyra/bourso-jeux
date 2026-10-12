@@ -1,12 +1,12 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/fraunces";
-@import "@fontsource-variable/dm-sans";
+@import "@fontsource-variable/montserrat";
+@import "@fontsource-variable/inter";
 
 @theme inline {
-  --font-heading: 'Fraunces Variable', Georgia, serif;
-  --font-sans: 'DM Sans Variable', system-ui, sans-serif;
+  --font-heading: 'Montserrat Variable', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', system-ui, sans-serif;
 
   --color-ring: var(--ring);
   --color-input: var(--input);
@@ -27,15 +27,15 @@
   --color-foreground: var(--foreground);
   --color-background: var(--background);
 
-  /* Palette « table de jeu » */
+  /* Charte CSE Lyra */
   --color-ink: var(--ink);
   --color-paper: var(--paper);
-  --color-felt: var(--felt);
-  --color-felt-deep: var(--felt-deep);
-  --color-meeple: var(--meeple);
-  --color-mustard: var(--mustard);
+  --color-teal: var(--teal);
+  --color-teal-deep: var(--teal-deep);
+  --color-sun: var(--sun);
+  --color-alert: var(--alert);
 
-  /* Ombre dure : la tranche d'une boîte de jeu */
+  /* Ombre dure : la tranche d'une boîte de jeu, comme le contour du logo */
   --shadow-box: 4px 4px 0 0 var(--ink);
   --shadow-box-lg: 7px 7px 0 0 var(--ink);
   --shadow-box-sm: 2px 2px 0 0 var(--ink);
@@ -48,31 +48,34 @@
 }
 
 :root {
-  --ink: oklch(0.25 0.03 55);
-  --paper: oklch(0.992 0.008 85);
-  --felt: oklch(0.43 0.085 160);
-  --felt-deep: oklch(0.33 0.07 160);
-  --meeple: oklch(0.58 0.19 28);
-  --mustard: oklch(0.83 0.14 88);
+  /* Les trois couleurs de la charte */
+  --ink: #005071;
+  --teal: #2eb6ab;
+  --sun: #f5d248;
 
-  --background: oklch(0.962 0.022 85);
+  /* Dérivées : le turquoise de la charte est trop clair pour du texte sur fond blanc */
+  --teal-deep: #147a72;
+  --alert: #c8402f;
+  --paper: #ffffff;
+
+  --background: #f3f7f8;
   --foreground: var(--ink);
   --card: var(--paper);
   --card-foreground: var(--ink);
   --popover: var(--paper);
   --popover-foreground: var(--ink);
-  --primary: var(--felt);
-  --primary-foreground: oklch(0.98 0.015 85);
-  --secondary: oklch(0.925 0.03 85);
+  --primary: var(--ink);
+  --primary-foreground: #ffffff;
+  --secondary: #e3eef1;
   --secondary-foreground: var(--ink);
-  --muted: oklch(0.925 0.03 85);
-  --muted-foreground: oklch(0.47 0.03 55);
-  --accent: var(--mustard);
+  --muted: #e3eef1;
+  --muted-foreground: #47707f;
+  --accent: var(--sun);
   --accent-foreground: var(--ink);
-  --destructive: var(--meeple);
-  --border: oklch(0.86 0.035 80);
-  --input: oklch(0.8 0.04 80);
-  --ring: var(--felt);
+  --destructive: var(--alert);
+  --border: #c7dae0;
+  --input: #a9c5cd;
+  --ring: var(--teal);
   --radius: 0.75rem;
 }
 
@@ -90,12 +93,12 @@
   h1,
   h2,
   h3 {
-    @apply font-heading;
+    @apply font-heading tracking-tight;
   }
 }
 
-@utility felt-texture {
-  background-image: radial-gradient(oklch(1 0 0 / 0.07) 1px, transparent 1.5px);
+@utility dot-texture {
+  background-image: radial-gradient(oklch(1 0 0 / 0.09) 1px, transparent 1.5px);
   background-size: 12px 12px;
 }
 

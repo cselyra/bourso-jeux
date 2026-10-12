@@ -14,11 +14,11 @@ import {
 } from '@/lib/games'
 
 const conditionTone: Record<GameCondition, string> = {
-  neuf: 'text-felt',
-  comme_neuf: 'text-felt',
+  neuf: 'text-teal-deep',
+  comme_neuf: 'text-teal-deep',
   tres_bon: 'text-ink',
   bon: 'text-ink',
-  correct: 'text-meeple',
+  correct: 'text-muted-foreground',
 }
 
 interface GameCardProps {
@@ -44,11 +44,11 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
           <GameCover game={game} />
         </div>
         {reserved && (
-          <span className="stamp absolute bottom-3 left-3 -rotate-6 border-[3px] bg-paper px-2.5 py-1.5 text-sm text-meeple">
+          <span className="stamp absolute bottom-3 left-3 -rotate-6 border-[3px] bg-paper px-2.5 py-1.5 text-sm text-alert">
             Réservé
           </span>
         )}
-        <span className="font-heading absolute -top-px -right-px rounded-bl-xl border-b-2 border-l-2 border-ink bg-mustard px-3 py-1 text-lg font-black">
+        <span className="font-heading absolute -top-px -right-px rounded-bl-xl border-b-2 border-l-2 border-ink bg-sun px-3 py-1 text-lg font-extrabold">
           {formatPrice(game.price_cents)}
         </span>
       </div>
@@ -63,15 +63,15 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
 
         <ul className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-medium">
           <li className="flex items-center gap-1.5">
-            <Meeple className="size-4 text-meeple" />
+            <Meeple className="size-4 text-teal" />
             {formatPlayers(game)}
           </li>
           <li className="flex items-center gap-1.5">
-            <Hourglass className="size-4 text-felt" aria-hidden="true" />
+            <Hourglass className="size-4 text-teal" aria-hidden="true" />
             {formatDuration(game.duration_min)}
           </li>
           <li className="flex items-center gap-1.5">
-            <Cake className="size-4 text-felt" aria-hidden="true" />
+            <Cake className="size-4 text-teal" aria-hidden="true" />
             dès {game.age_min} ans
           </li>
         </ul>
@@ -94,7 +94,7 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
               aria-pressed={inCart}
               className={cn(
                 'flex h-10 w-full items-center justify-center gap-2 rounded-lg border-2 border-ink text-sm font-bold transition outline-none focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px',
-                inCart ? 'bg-paper text-felt hover:bg-muted' : 'bg-felt text-primary-foreground hover:bg-felt-deep',
+                inCart ? 'bg-teal/15 text-ink hover:bg-teal/25' : 'bg-ink text-white hover:bg-ink/85',
               )}
             >
               {inCart ? <Check className="size-4" aria-hidden="true" /> : <Plus className="size-4" aria-hidden="true" />}

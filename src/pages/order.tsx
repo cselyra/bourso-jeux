@@ -22,7 +22,7 @@ function Panel({ tone, stamp, title, children }: { tone: string; stamp: string; 
   return (
     <div className="rounded-xl border-2 border-ink bg-card p-6 shadow-box">
       <p className={`stamp mb-3 -rotate-2 ${tone}`}>{stamp}</p>
-      <h1 className="text-3xl font-black text-balance sm:text-4xl">{title}</h1>
+      <h1 className="text-3xl font-extrabold text-balance sm:text-4xl">{title}</h1>
       <div className="mt-3 space-y-3 text-base">{children}</div>
     </div>
   )
@@ -34,7 +34,7 @@ function Pending({ order, token }: { order: OrderView; token: string }) {
 
   if (order.payment_mode === 'link') {
     return (
-      <Panel tone="text-felt" stamp="Jeux réservés" title="Il ne reste qu'à payer">
+      <Panel tone="text-teal-deep" stamp="Jeux réservés" title="Il ne reste qu'à payer">
         <p>
           Un e-mail contenant votre lien de paiement vient d'être envoyé à <strong>{order.buyer_email}</strong>.
         </p>
@@ -48,14 +48,14 @@ function Pending({ order, token }: { order: OrderView; token: string }) {
   const Form = embeddedForms[order.provider]
   if (start?.kind !== 'embedded' || !Form) {
     return (
-      <Panel tone="text-meeple" stamp="Paiement interrompu" title="La session de paiement est perdue">
+      <Panel tone="text-alert" stamp="Paiement interrompu" title="La session de paiement est perdue">
         <p>Vos jeux restent bloqués jusqu'au {before}, puis seront remis en vente : vous pourrez alors les réserver à nouveau.</p>
       </Panel>
     )
   }
 
   return (
-    <Panel tone="text-felt" stamp="Jeux réservés" title="Réglez pour confirmer">
+    <Panel tone="text-teal-deep" stamp="Jeux réservés" title="Réglez pour confirmer">
       <p>Vos jeux sont bloqués pour vous jusqu'au {before}.</p>
       {submitted ? (
         <p className="font-semibold">Paiement envoyé, confirmation en cours…</p>
@@ -72,13 +72,13 @@ function Status({ order, token }: { order: OrderView; token: string }) {
       return <Pending order={order} token={token} />
     case 'paid':
       return (
-        <Panel tone="text-felt" stamp="Payé" title="C'est à vous de jouer !">
+        <Panel tone="text-teal-deep" stamp="Payé" title="C'est à vous de jouer !">
           <p>Votre paiement est bien reçu. Vos jeux vous attendent : le retrait se fait sur place.</p>
         </Panel>
       )
     case 'conflict':
       return (
-        <Panel tone="text-meeple" stamp="À rembourser" title="Paiement reçu trop tard">
+        <Panel tone="text-alert" stamp="À rembourser" title="Paiement reçu trop tard">
           <p>
             Votre paiement est arrivé après la fin de la réservation et au moins un jeu avait été repris. Nous vous contactons à{' '}
             <strong>{order.buyer_email}</strong> pour vous rembourser.
@@ -88,7 +88,7 @@ function Status({ order, token }: { order: OrderView; token: string }) {
     case 'expired':
     case 'cancelled':
       return (
-        <Panel tone="text-meeple" stamp={order.status === 'expired' ? 'Expirée' : 'Annulée'} title="Cette réservation n'est plus active">
+        <Panel tone="text-alert" stamp={order.status === 'expired' ? 'Expirée' : 'Annulée'} title="Cette réservation n'est plus active">
           <p>Les jeux ont été remis en vente. S'ils sont encore disponibles, vous pouvez les réserver à nouveau.</p>
         </Panel>
       )
@@ -128,7 +128,7 @@ export function OrderPage() {
           </div>
         </>
       )}
-      <Link to="/" className="inline-block font-semibold text-felt underline underline-offset-4">
+      <Link to="/" className="inline-block font-semibold text-ink underline underline-offset-4">
         Retour au catalogue
       </Link>
     </div>
