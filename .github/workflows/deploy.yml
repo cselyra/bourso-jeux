@@ -17,7 +17,19 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Donne aussi accès aux variables définies sur l'environnement « github-pages »
+    environment: github-pages
+    env:
+      # Acceptées en variable ou en secret, au niveau du dépôt ou de l'environnement
+      VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+      VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
     steps:
+      - name: Vérifier la configuration Supabase
+        run: |
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_ANON_KEY" ]; then
+            echo "::error::VITE_SUPABASE_URL ou VITE_SUPABASE_ANON_KEY est introuvable : le site serait publié en mode démo."
+            exit 1
+          fi
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -29,8 +41,6 @@ jobs:
         env:
           # Avec un domaine personnalisé, définir la variable de dépôt VITE_BASE à « / »
           VITE_BASE: ${{ vars.VITE_BASE || format('/{0}/', github.event.repository.name) }}
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
       # GitHub Pages sert 404.html pour toute route inconnue : le routeur prend le relais
       - run: cp dist/index.html dist/404.html
       - uses: actions/upload-pages-artifact@v3
