@@ -2,7 +2,7 @@
 export const PICKUP = {
   place: 'Lyra',
   address: "209 rue de l'Innovation, 31670 Labège",
-  date: '2026-12-13',
+  date: '2026-12-14',
   from: '12 h',
   to: '14 h',
 }
