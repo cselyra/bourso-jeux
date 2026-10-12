@@ -15,7 +15,7 @@ function lostReason(game: Game | undefined, now: number) {
     case 'available':
       return null
     case 'reserved':
-      return "vient d'être réservé par quelqu'un d'autre"
+      return "vient d'être vendu"
     case 'sold':
       return "vient d'être vendu"
     case 'withdrawn':

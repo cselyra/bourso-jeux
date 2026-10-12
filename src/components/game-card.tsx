@@ -47,7 +47,7 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
         </div>
         {reserved && (
           <span className="stamp absolute bottom-3 left-3 -rotate-6 border-[3px] bg-sun px-2.5 py-1.5 text-sm text-ink">
-            Réservé
+            Vendu
           </span>
         )}
         <span className="font-heading absolute -top-px -right-px rounded-bl-xl border-b-2 border-l-2 border-ink bg-sun px-3 py-1 text-lg font-extrabold">
@@ -94,9 +94,9 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
         <div className="mt-auto pt-1">
           {reserved ? (
             <p className="rounded-lg bg-muted px-3 py-2 text-center text-sm text-muted-foreground">
-              De nouveau disponible dans{' '}
-              <strong className="font-semibold text-foreground">{formatRemaining(game.reserved_until!, now)}</strong> si
-              non payé
+              Paiement en cours : de nouveau disponible dans{' '}
+              <strong className="font-semibold text-foreground">{formatRemaining(game.reserved_until!, now)}</strong>{" "}
+              s'il n'aboutit pas
             </p>
           ) : (
             <button

@@ -27,7 +27,7 @@ export const AGES = [4, 6, 8, 10, 12, 14]
 
 export const STATUSES: { value: VisibleStatus; label: string }[] = [
   { value: 'available', label: 'Disponible' },
-  { value: 'reserved', label: 'Réservé' },
+  { value: 'reserved', label: 'Vendu' },
 ]
 
 export const SORTS: { value: SortKey; label: string }[] = [

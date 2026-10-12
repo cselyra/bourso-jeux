@@ -14,9 +14,9 @@ import { type OrderView, createOrder, savePaymentStart } from '@/lib/orders'
 import { supabase } from '@/lib/supabase'
 
 const ERRORS = {
-  unavailable: "Trop tard pour une partie du panier : quelqu'un a réservé juste avant vous. Rien n'a été réservé, retirez les jeux concernés pour continuer.",
-  payment_unavailable: "Le paiement n'a pas pu être préparé. Rien n'a été réservé, réessayez dans un instant.",
-  error: "La réservation n'a pas abouti. Vérifiez vos coordonnées et réessayez.",
+  unavailable: "Trop tard pour une partie du panier : quelqu'un a acheté juste avant vous. Rien n'a été commandé, retirez les jeux concernés pour continuer.",
+  payment_unavailable: "Le paiement n'a pas pu être préparé. Rien n'a été commandé, réessayez dans un instant.",
+  error: "La commande n'a pas abouti. Vérifiez vos coordonnées et réessayez.",
 }
 
 const fields = [
@@ -94,7 +94,7 @@ export function CheckoutPage() {
     <div className="mx-auto grid max-w-5xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_22rem]">
       <form onSubmit={submit} className="space-y-6">
         <div>
-          <h1 className="text-4xl font-extrabold">Réserver mes jeux</h1>
+          <h1 className="text-4xl font-extrabold">Finaliser ma commande</h1>
           <p className="mt-2 text-muted-foreground">
             Vos jeux sont bloqués pour vous dès la validation, le temps de régler par carte.
           </p>
@@ -105,7 +105,7 @@ export function CheckoutPage() {
 
         {error && (
           <Alert className="border-2 border-ink bg-sun/30">
-            <AlertTitle>Réservation non enregistrée</AlertTitle>
+            <AlertTitle>Commande non enregistrée</AlertTitle>
             <AlertDescription className="text-foreground">{ERRORS[error]}</AlertDescription>
           </Alert>
         )}
@@ -134,9 +134,9 @@ export function CheckoutPage() {
           disabled={!supabase || cart.checkingOut || lost.length > 0 || available.length === 0}
           className="h-12 w-full border-2 border-ink text-base font-bold"
         >
-          {cart.checkingOut ? 'Réservation en cours…' : `Valider la réservation · ${formatPrice(total)}`}
+          {cart.checkingOut ? 'Commande en cours…' : `Valider et payer · ${formatPrice(total)}`}
         </Button>
-        {!supabase && <p className="text-center text-sm text-ink">Réservation indisponible en mode démo.</p>}
+        {!supabase && <p className="text-center text-sm text-ink">Commande indisponible en mode démo.</p>}
       </form>
 
       <aside className="h-fit rounded-xl border-2 border-ink bg-secondary p-5">

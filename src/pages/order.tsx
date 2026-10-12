@@ -35,7 +35,7 @@ function Pending({ order, token }: { order: OrderView; token: string }) {
 
   if (order.payment_mode === 'link') {
     return (
-      <Panel tone="text-teal" stamp="Jeux réservés" title="Il ne reste qu'à payer">
+      <Panel tone="text-teal" stamp="Paiement attendu" title="Il ne reste qu'à payer">
         <p>
           Un e-mail contenant votre lien de paiement vient d'être envoyé à <strong>{order.buyer_email}</strong>.
         </p>
@@ -50,13 +50,13 @@ function Pending({ order, token }: { order: OrderView; token: string }) {
   if (start?.kind !== 'embedded' || !Form) {
     return (
       <Panel tone="text-ink" stamp="Paiement interrompu" title="La session de paiement est perdue">
-        <p>Vos jeux restent bloqués jusqu'au {before}, puis seront remis en vente : vous pourrez alors les réserver à nouveau.</p>
+        <p>Vos jeux restent bloqués jusqu'au {before}, puis seront remis en vente : vous pourrez alors les commander à nouveau.</p>
       </Panel>
     )
   }
 
   return (
-    <Panel tone="text-teal" stamp="Jeux réservés" title="Réglez pour confirmer">
+    <Panel tone="text-teal" stamp="Paiement attendu" title="Réglez pour confirmer">
       <p>Vos jeux sont bloqués pour vous jusqu'au {before}.</p>
       {submitted ? (
         <p className="font-semibold">Paiement envoyé, confirmation en cours…</p>
@@ -82,7 +82,7 @@ function Status({ order, token }: { order: OrderView; token: string }) {
       return (
         <Panel tone="text-ink" stamp="À rembourser" title="Paiement reçu trop tard">
           <p>
-            Votre paiement est arrivé après la fin de la réservation et au moins un jeu avait été repris. Nous vous contactons à{' '}
+            Votre paiement est arrivé après la fin du délai de paiement et au moins un jeu avait été repris. Nous vous contactons à{' '}
             <strong>{order.buyer_email}</strong> pour vous rembourser.
           </p>
         </Panel>
@@ -90,8 +90,8 @@ function Status({ order, token }: { order: OrderView; token: string }) {
     case 'expired':
     case 'cancelled':
       return (
-        <Panel tone="text-ink" stamp={order.status === 'expired' ? 'Expirée' : 'Annulée'} title="Cette réservation n'est plus active">
-          <p>Les jeux ont été remis en vente. S'ils sont encore disponibles, vous pouvez les réserver à nouveau.</p>
+        <Panel tone="text-ink" stamp={order.status === 'expired' ? 'Expirée' : 'Annulée'} title="Cette commande n'est plus active">
+          <p>Les jeux ont été remis en vente. S'ils sont encore disponibles, vous pouvez les commander à nouveau.</p>
         </Panel>
       )
   }

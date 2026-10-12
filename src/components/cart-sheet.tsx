@@ -50,7 +50,7 @@ export function CartSheet() {
       <SheetContent className="w-full gap-0 border-l-2 border-ink sm:max-w-md">
         <SheetHeader className="border-b-2 border-ink">
           <SheetTitle className="text-2xl font-bold">Votre panier</SheetTitle>
-          <SheetDescription>Un jeu n'est bloqué pour vous qu'une fois la réservation validée.</SheetDescription>
+          <SheetDescription>Un jeu n'est bloqué pour vous qu'une fois la commande validée.</SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 space-y-4 overflow-y-auto p-4">
@@ -72,10 +72,10 @@ export function CartSheet() {
             disabled={available.length === 0 || lost.length > 0}
             onClick={() => {
               setOpen(false)
-              void navigate('/reservation')
+              void navigate('/commander')
             }}
           >
-            Réserver ces jeux
+            Commander ces jeux
           </Button>
         </SheetFooter>
       </SheetContent>

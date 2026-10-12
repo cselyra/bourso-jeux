@@ -34,7 +34,7 @@ function Layout() {
       <div className="flex-1">
         <Routes>
           <Route path="/" element={<CatalogPage />} />
-          <Route path="/reservation" element={<CheckoutPage />} />
+          <Route path="/commander" element={<CheckoutPage />} />
           <Route path="/commande/:token" element={<OrderPage />} />
           <Route
             path="*"

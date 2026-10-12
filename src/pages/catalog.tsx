@@ -42,7 +42,7 @@ export function CatalogPage() {
               La bourse aux jeux de société
             </h1>
             <p className="mt-4 max-w-xl text-lg text-white/85">
-              Réservez en ligne, réglez par carte, puis venez chercher vos jeux. Premier arrivé, premier servi.
+              Achetez en ligne, réglez par carte, puis venez chercher vos jeux. Premier arrivé, premier servi.
             </p>
             <div className="mt-5 flex max-w-4xl flex-col gap-3 lg:flex-row lg:items-stretch">
               <p className="flex flex-1 items-center gap-2 rounded-lg border-2 border-sun px-3 py-2.5 text-sm">
