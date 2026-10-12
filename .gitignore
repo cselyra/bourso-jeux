@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Captures et images déposées à la racine : jamais dans le dépôt (elles peuvent contenir des clés)
+/*.jpeg
+/*.jpg
+/*.png
