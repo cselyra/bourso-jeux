@@ -114,7 +114,7 @@ function matches(game: Game, f: Filters, status: VisibleStatus) {
     return false
   }
   if (f.age !== null && game.age_min > f.age) return false
-  if (f.conditions.length && !f.conditions.includes(game.condition)) return false
+  if (f.conditions.length && (game.condition === null || !f.conditions.includes(game.condition))) return false
   if (f.maxPrice !== null && game.price_cents > f.maxPrice * 100) return false
   if (f.q) {
     const q = normalize(f.q.trim())

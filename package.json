@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "import": "node scripts/import-games.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
@@ -36,7 +37,9 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "exceljs": "^4.4.0",
     "oxlint": "^1.81.0",
+    "sharp": "^0.35.5",
     "supabase": "^2.120.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",

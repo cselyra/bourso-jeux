@@ -14,16 +14,18 @@ export interface Game {
   max_players: number
   duration_min: number
   age_min: number
-  condition: GameCondition
+  // null tant que l'état de la boîte n'a pas été relevé
+  condition: GameCondition | null
   condition_note: string | null
   price_cents: number
+  price_new_cents: number | null
   image_path: string | null
   status: GameStatus
   reserved_until: string | null
 }
 
 export const GAME_COLUMNS =
-  'id, ref, title, publisher, description, min_players, max_players, duration_min, age_min, condition, condition_note, price_cents, image_path, status, reserved_until'
+  'id, ref, title, publisher, description, min_players, max_players, duration_min, age_min, condition, condition_note, price_cents, price_new_cents, image_path, status, reserved_until'
 
 export const CONDITIONS: { value: GameCondition; label: string }[] = [
   { value: 'neuf', label: 'Neuf' },

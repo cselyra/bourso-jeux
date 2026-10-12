@@ -18,6 +18,7 @@ function game(title: string, overrides: Partial<Game> = {}): Game {
     condition: 'bon',
     condition_note: null,
     price_cents: 1500,
+    price_new_cents: null,
     image_path: null,
     status: 'available',
     reserved_until: null,

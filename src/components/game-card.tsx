@@ -31,6 +31,8 @@ interface GameCardProps {
 
 export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardProps) {
   const reserved = status === 'reserved'
+  // Le prix neuf n'est un argument que s'il est plus élevé que le prix demandé
+  const showNewPrice = game.price_new_cents !== null && game.price_new_cents > game.price_cents
 
   return (
     <article
@@ -76,9 +78,18 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
           </li>
         </ul>
 
-        <p>
-          <span className={cn('stamp -rotate-2', conditionTone[game.condition])}>{conditionLabel(game.condition)}</span>
-        </p>
+        {(game.condition || showNewPrice) && (
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            {game.condition && (
+              <span className={cn('stamp -rotate-2', conditionTone[game.condition])}>{conditionLabel(game.condition)}</span>
+            )}
+            {showNewPrice && (
+              <span className="text-sm text-muted-foreground">
+                Neuf : <s>{formatPrice(game.price_new_cents!)}</s>
+              </span>
+            )}
+          </p>
+        )}
 
         <div className="mt-auto pt-1">
           {reserved ? (

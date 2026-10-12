@@ -55,6 +55,7 @@ export function demoGames(): Game[] {
     condition,
     condition_note: null,
     price_cents: euros * 100,
+    price_new_cents: null,
     image_path: null,
     status: status ?? 'available',
     reserved_until: status === 'reserved' ? new Date(now + (minutes ?? 60) * 60_000).toISOString() : null,
