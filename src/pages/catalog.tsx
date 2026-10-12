@@ -45,8 +45,8 @@ export function CatalogPage() {
               Réservez en ligne, réglez par carte, puis venez chercher vos jeux. Premier arrivé, premier servi.
             </p>
             <div className="mt-5 flex max-w-4xl flex-col gap-3 lg:flex-row lg:items-stretch">
-              <p className="flex flex-1 items-start gap-2 rounded-lg border-2 border-sun px-3 py-2.5 text-sm">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-sun" aria-hidden="true" />
+              <p className="flex flex-1 items-center gap-2 rounded-lg border-2 border-sun px-3 py-2.5 text-sm">
+                <MapPin className="size-4 shrink-0 text-sun" aria-hidden="true" />
                 <span>
                   <strong className="font-semibold">Retrait le {pickupWhen}</strong>
                   <br />
@@ -54,8 +54,8 @@ export function CatalogPage() {
                 </span>
               </p>
               {/* Rappel du partenariat du CSE, pour qui ne trouve pas son jeu ici */}
-              <p className="flex flex-1 items-start gap-2 rounded-lg border-2 border-sun bg-sun px-3 py-2.5 text-sm text-ink">
-                <Store className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+              <p className="flex flex-1 items-center gap-2 rounded-lg border-2 border-sun bg-sun px-3 py-2.5 text-sm text-ink">
+                <Store className="size-4 shrink-0" aria-hidden="true" />
                 <span>
                   <strong className="font-semibold">Vous ne trouvez pas votre bonheur ?</strong>
                   <br />
