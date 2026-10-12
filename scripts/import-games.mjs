@@ -70,7 +70,10 @@ const cellLink = (cell) => (cell.value && typeof cell.value === 'object' ? (cell
 
 function number(value) {
   if (value == null || value === '') return null
-  const n = typeof value === 'number' ? value : Number(String(value).replace(',', '.').replace(/[^\d.]/g, ''))
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null
+  // « ? », « n/a »… : une cellule sans chiffre vaut « non renseigné », pas zéro
+  const digits = String(value).replace(',', '.').replace(/[^\d.]/g, '')
+  const n = digits === '' ? NaN : Number(digits)
   return Number.isFinite(n) ? n : null
 }
 
@@ -129,7 +132,7 @@ async function readInventory(path) {
     }
     if (game.min_players == null || game.max_players == null) problems.push('nombre de joueurs manquant')
     else if (game.max_players < game.min_players) problems.push('joueurs max < joueurs min')
-    if (game.duration_min == null) problems.push('durée manquante')
+    if (game.duration_min == null || game.duration_min <= 0) problems.push('durée manquante')
     if (game.age_min == null) problems.push('âge manquant')
     if (game.price_cents == null) problems.push('prix de vente manquant')
 
