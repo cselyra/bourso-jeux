@@ -1,4 +1,4 @@
-import { MapPin, RotateCcw, Search, SlidersHorizontal } from 'lucide-react'
+import { MapPin, RotateCcw, Search, SlidersHorizontal, Store } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 import { useMemo } from 'react'
 import { FiltersPanel } from '@/components/filters-panel'
@@ -22,15 +22,6 @@ export function CatalogPage() {
   const now = useNow(games)
   const { filters, update, reset } = useFilters()
   const cart = useCart()
-
-  const counts = useMemo(() => {
-    const totals = { available: 0, reserved: 0 }
-    for (const game of games ?? []) {
-      const status = visibleStatus(game, now)
-      if (status) totals[status] += 1
-    }
-    return totals
-  }, [games, now])
 
   const priceCeiling = useMemo(() => {
     const max = Math.max(0, ...(games ?? []).filter((g) => visibleStatus(g, now)).map((g) => g.price_cents))
@@ -59,16 +50,6 @@ export function CatalogPage() {
                 <strong className="font-semibold">Retrait le {pickupWhen}</strong> · {pickupWhere}
               </span>
             </p>
-            {games && (
-              <p className="mt-6 flex flex-wrap gap-x-6 gap-y-1 font-semibold" aria-live="polite">
-                <span>
-                  <span className="font-heading text-2xl font-extrabold text-sun">{counts.available}</span> disponibles
-                </span>
-                <span>
-                  <span className="font-heading text-2xl font-extrabold text-sun">{counts.reserved}</span> réservés
-                </span>
-              </p>
-            )}
           </div>
 
           {/* Le logo sur une tuile blanche, entouré des carrés arrondis de l'identité du CSE */}
@@ -199,6 +180,20 @@ export function CatalogPage() {
               ))}
             </AnimatePresence>
           </ul>
+
+          {/* Rappel du partenariat du CSE, pour qui n'a pas trouvé son jeu ici */}
+          {games && (
+            <aside className="mt-10 flex flex-col gap-4 rounded-xl border-2 border-ink bg-sun p-5 shadow-box sm:flex-row sm:items-center sm:p-6">
+              <Store className="size-10 shrink-0" aria-hidden="true" />
+              <div>
+                <h2 className="text-xl font-bold sm:text-2xl">Vous ne trouvez pas votre bonheur ?</h2>
+                <p className="mt-1 text-base">
+                  Pensez au partenariat du CSE : la boutique <strong>Jeux du Monde</strong>, à Toulouse, accorde{' '}
+                  <strong>10 % de réduction aux salariés Lyra</strong>.
+                </p>
+              </div>
+            </aside>
+          )}
         </main>
       </div>
     </>
