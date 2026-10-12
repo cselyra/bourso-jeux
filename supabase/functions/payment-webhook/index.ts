@@ -27,7 +27,7 @@ Deno.serve(async (request) => {
         provider: provider.name,
         transaction_id: `rejet-${crypto.randomUUID()}`,
         status: 'rejected',
-        payload: { reason: cause.message },
+        payload: { reason: cause.message, received: cause.received ?? null },
       })
       // Le motif précis apparaît aussi dans le journal des notifications du prestataire
       return new Response(`rejected: ${cause.message}`, { status: 401 })

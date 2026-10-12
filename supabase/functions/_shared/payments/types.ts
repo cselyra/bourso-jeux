@@ -33,4 +33,9 @@ export interface PaymentProvider {
   parseWebhook(request: Request): Promise<PaymentEvent>
 }
 
-export class WebhookRejected extends Error {}
+export class WebhookRejected extends Error {
+  // `received` : ce qui a été reçu, conservé pour pouvoir traiter le paiement à la main
+  constructor(message: string, public received?: unknown) {
+    super(message)
+  }
+}

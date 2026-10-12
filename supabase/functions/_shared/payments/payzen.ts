@@ -74,7 +74,7 @@ async function parseFormNotification(form: FormData, formKey: string | undefined
   // Selon le réglage de la boutique : HMAC-SHA-256 en base64, ou SHA-1 en hexadécimal (ancien)
   const expected = /^[0-9a-f]{40}$/i.test(received) ? await sha1Hex(message) : await hmacSha256Base64(formKey, message)
   if (!timingSafeEqual(expected, /^[0-9a-f]{40}$/i.test(received) ? received.toLowerCase() : received)) {
-    throw new WebhookRejected('signature incorrecte (format formulaire) : PAYZEN_FORM_KEY ne correspond pas à la clé de la boutique (test ou production)')
+    throw new WebhookRejected('signature incorrecte (format formulaire) : PAYZEN_FORM_KEY ne correspond pas à la clé de la boutique (test ou production)', { ...fields, signature: received })
   }
 
   const amount = Number.parseInt(fields.vads_amount ?? '', 10)
