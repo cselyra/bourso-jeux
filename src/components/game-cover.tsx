@@ -28,7 +28,7 @@ export function GameCover({ game }: { game: Game }) {
         alt=""
         loading="lazy"
         onError={() => setFailed(true)}
-        className="size-full bg-muted object-cover"
+        className="size-full bg-paper object-contain p-3"
       />
     )
   }
