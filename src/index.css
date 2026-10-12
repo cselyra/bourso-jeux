@@ -1,0 +1,106 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/dm-sans";
+
+@theme inline {
+  --font-heading: 'Fraunces Variable', Georgia, serif;
+  --font-sans: 'DM Sans Variable', system-ui, sans-serif;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  /* Palette « table de jeu » */
+  --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-felt: var(--felt);
+  --color-felt-deep: var(--felt-deep);
+  --color-meeple: var(--meeple);
+  --color-mustard: var(--mustard);
+
+  /* Ombre dure : la tranche d'une boîte de jeu */
+  --shadow-box: 4px 4px 0 0 var(--ink);
+  --shadow-box-lg: 7px 7px 0 0 var(--ink);
+  --shadow-box-sm: 2px 2px 0 0 var(--ink);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+:root {
+  --ink: oklch(0.25 0.03 55);
+  --paper: oklch(0.992 0.008 85);
+  --felt: oklch(0.43 0.085 160);
+  --felt-deep: oklch(0.33 0.07 160);
+  --meeple: oklch(0.58 0.19 28);
+  --mustard: oklch(0.83 0.14 88);
+
+  --background: oklch(0.962 0.022 85);
+  --foreground: var(--ink);
+  --card: var(--paper);
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--felt);
+  --primary-foreground: oklch(0.98 0.015 85);
+  --secondary: oklch(0.925 0.03 85);
+  --secondary-foreground: var(--ink);
+  --muted: oklch(0.925 0.03 85);
+  --muted-foreground: oklch(0.47 0.03 55);
+  --accent: var(--mustard);
+  --accent-foreground: var(--ink);
+  --destructive: var(--meeple);
+  --border: oklch(0.86 0.035 80);
+  --input: oklch(0.8 0.04 80);
+  --ring: var(--felt);
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: light;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading;
+  }
+}
+
+@utility felt-texture {
+  background-image: radial-gradient(oklch(1 0 0 / 0.07) 1px, transparent 1.5px);
+  background-size: 12px 12px;
+}
+
+/* Tampon encreur : état de la boîte, mention « réservé » */
+@utility stamp {
+  @apply inline-flex items-center rounded-sm border-2 border-current px-1.5 py-0.5 text-[0.68rem] leading-none font-bold tracking-[0.12em] uppercase;
+  mask-image: radial-gradient(circle at 30% 40%, #000 60%, rgb(0 0 0 / 0.72) 100%);
+}
