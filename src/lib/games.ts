@@ -2,7 +2,8 @@ import { supabaseUrl } from '@/lib/supabase'
 
 export type GameStatus = 'available' | 'reserved' | 'sold' | 'withdrawn'
 export type GameCondition = 'neuf' | 'comme_neuf' | 'tres_bon' | 'bon' | 'correct'
-export type VisibleStatus = 'available' | 'reserved'
+// Ce que voit un visiteur : un jeu est en vente, ou vendu (c'est-à-dire réellement payé)
+export type VisibleStatus = 'available' | 'sold'
 
 export interface Game {
   id: string
@@ -38,17 +39,11 @@ export const CONDITIONS: { value: GameCondition; label: string }[] = [
 export const conditionLabel = (condition: GameCondition) =>
   CONDITIONS.find((c) => c.value === condition)?.label ?? condition
 
-// Une réservation échue rend le jeu disponible sans attendre le nettoyage côté base.
-export function effectiveStatus(game: Game, now: number): GameStatus {
-  if (game.status === 'reserved' && game.reserved_until && Date.parse(game.reserved_until) <= now) {
-    return 'available'
-  }
-  return game.status
-}
-
-export function visibleStatus(game: Game, now: number): VisibleStatus | null {
-  const status = effectiveStatus(game, now)
-  return status === 'available' || status === 'reserved' ? status : null
+// Un paiement en cours bloque le jeu côté serveur mais ne s'affiche pas : tant qu'il n'est pas
+// payé, le jeu reste présenté comme en vente. Les jeux retirés ne sont jamais montrés.
+export function visibleStatus(game: Game): VisibleStatus | null {
+  if (game.status === 'sold') return 'sold'
+  return game.status === 'withdrawn' ? null : 'available'
 }
 
 const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 })
@@ -68,11 +63,6 @@ export function formatPlayers(game: Pick<Game, 'min_players' | 'max_players'>) {
   return `${game.min_players} à ${game.max_players} joueurs`
 }
 
-export function formatRemaining(until: string, now: number) {
-  const minutes = Math.ceil((Date.parse(until) - now) / 60_000)
-  if (minutes <= 1) return "moins d'une minute"
-  return formatDuration(minutes)
-}
 
 export function imageUrl(game: Pick<Game, 'image_path'>) {
   if (!game.image_path) return null

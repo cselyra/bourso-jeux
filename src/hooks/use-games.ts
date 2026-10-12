@@ -1,6 +1,6 @@
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { demoGames } from '@/lib/demo-games'
 import { type Game, GAME_COLUMNS } from '@/lib/games'
 import { supabase } from '@/lib/supabase'
@@ -32,7 +32,7 @@ export function useGamesRealtime() {
       queryClient.setQueryData<Game[]>(GAMES_KEY, (games) => games && update(games))
 
     if (!supabase) {
-      // Mode démo : `__demo.reserve('D001')` dans la console simule un autre acheteur.
+      // Mode démo : `__demo.sell('D001')` dans la console simule un autre acheteur.
       const set = (ref: string, changes: Partial<Game>) =>
         patch((games) => games.map((g) => (g.ref === ref ? { ...g, ...changes } : g)))
       const demo = {
@@ -69,25 +69,4 @@ export function useGamesRealtime() {
       void client.removeChannel(channel)
     }
   }, [queryClient])
-}
-
-const TICK_MS = 30_000
-
-// Horloge partagée par les comptes à rebours. Elle se réveille aussi pile à la prochaine
-// échéance de réservation, pour qu'un jeu redevienne disponible sans attendre le tick.
-export function useNow(games: Game[] | undefined) {
-  const [now, setNow] = useState(() => Date.now())
-
-  useEffect(() => {
-    let delay = TICK_MS
-    for (const game of games ?? []) {
-      if (game.status !== 'reserved' || !game.reserved_until) continue
-      const remaining = Date.parse(game.reserved_until) - now
-      if (remaining > 0) delay = Math.min(delay, remaining + 50)
-    }
-    const timer = setTimeout(() => setNow(Date.now()), delay)
-    return () => clearTimeout(timer)
-  }, [games, now])
-
-  return now
 }

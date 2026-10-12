@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useFilters } from '@/hooks/use-filters'
-import { useGames, useNow } from '@/hooks/use-games'
+import { useGames } from '@/hooks/use-games'
 import { useCart } from '@/lib/cart'
 import { type SortKey, SORTS, applyFilters, countActive } from '@/lib/filters'
 import { visibleStatus } from '@/lib/games'
@@ -19,16 +19,15 @@ const GRID = 'grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols
 
 export function CatalogPage() {
   const { data: games, isPending, isError, refetch } = useGames()
-  const now = useNow(games)
   const { filters, update, reset } = useFilters()
   const cart = useCart()
 
   const priceCeiling = useMemo(() => {
-    const max = Math.max(0, ...(games ?? []).filter((g) => visibleStatus(g, now)).map((g) => g.price_cents))
+    const max = Math.max(0, ...(games ?? []).filter((g) => visibleStatus(g)).map((g) => g.price_cents))
     return Math.max(5, Math.ceil(max / 500) * 5)
-  }, [games, now])
+  }, [games])
 
-  const results = useMemo(() => applyFilters(games ?? [], filters, now), [games, filters, now])
+  const results = useMemo(() => applyFilters(games ?? [], filters), [games, filters])
   const active = countActive(filters)
   const panel = <FiltersPanel filters={filters} onChange={update} priceCeiling={priceCeiling} />
 
@@ -185,8 +184,7 @@ export function CatalogPage() {
                 >
                   <GameCard
                     game={game}
-                    status={visibleStatus(game, now) ?? 'available'}
-                    now={now}
+                    status={visibleStatus(game) ?? 'available'}
                     inCart={cart.has(game.id)}
                     onToggleCart={() => (cart.has(game.id) ? cart.remove(game.id) : cart.add(game.id))}
                   />

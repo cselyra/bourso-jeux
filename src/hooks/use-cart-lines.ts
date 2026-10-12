@@ -1,6 +1,6 @@
-import { useGames, useNow } from '@/hooks/use-games'
+import { useGames } from '@/hooks/use-games'
 import { useCart } from '@/lib/cart'
-import { type Game, effectiveStatus } from '@/lib/games'
+import { type Game, visibleStatus } from '@/lib/games'
 
 export interface CartLine {
   id: string
@@ -9,16 +9,14 @@ export interface CartLine {
   lost: string | null
 }
 
-function lostReason(game: Game | undefined, now: number) {
+function lostReason(game: Game | undefined) {
   if (!game) return "n'est plus en vente"
-  switch (effectiveStatus(game, now)) {
+  switch (visibleStatus(game)) {
     case 'available':
       return null
-    case 'reserved':
-      return "vient d'être vendu"
     case 'sold':
       return "vient d'être vendu"
-    case 'withdrawn':
+    case null:
       return "n'est plus en vente"
   }
 }
@@ -27,12 +25,11 @@ function lostReason(game: Game | undefined, now: number) {
 export function useCartLines() {
   const cart = useCart()
   const { data: games } = useGames()
-  const now = useNow(games)
 
   const lines: CartLine[] = games
     ? cart.ids.map((id) => {
         const game = games.find((g) => g.id === id)
-        return { id, game, lost: cart.checkingOut ? null : lostReason(game, now) }
+        return { id, game, lost: cart.checkingOut ? null : lostReason(game) }
       })
     : []
   const lost = lines.filter((line) => line.lost !== null)

@@ -14,7 +14,7 @@ import { type OrderView, createOrder, savePaymentStart } from '@/lib/orders'
 import { supabase } from '@/lib/supabase'
 
 const ERRORS = {
-  unavailable: "Trop tard pour une partie du panier : quelqu'un a acheté juste avant vous. Rien n'a été commandé, retirez les jeux concernés pour continuer.",
+  unavailable: "Trop tard pour une partie du panier : un autre acheteur est en train de régler ces jeux, ou vient de les acheter. Rien n'a été commandé.",
   payment_unavailable: "Le paiement n'a pas pu être préparé. Rien n'a été commandé, réessayez dans un instant.",
   error: "La commande n'a pas abouti. Vérifiez vos coordonnées et réessayez.",
 }
@@ -32,6 +32,8 @@ export function CheckoutPage() {
   const queryClient = useQueryClient()
   const [buyer, setBuyer] = useState({ name: '', email: '', phone: '' })
   const [error, setError] = useState<keyof typeof ERRORS | null>(null)
+  // Jeux refusés par le serveur à la validation : un paiement en cours ne se voit pas dans le catalogue
+  const [refused, setRefused] = useState<string[]>([])
 
   // Vider le panier avant d'avoir quitté la page ferait apparaître « panier vide » un instant.
   const afterLeave = useRef<(() => void) | null>(null)
@@ -40,6 +42,7 @@ export function CheckoutPage() {
   async function submit(event: FormEvent) {
     event.preventDefault()
     setError(null)
+    setRefused([])
     cart.setCheckingOut(true)
     try {
       const ids = available.map((line) => line.id)
@@ -70,7 +73,8 @@ export function CheckoutPage() {
         return
       }
       setError(result.reason)
-      // L'état des jeux fait foi : on le relit pour désigner ceux qui sont partis.
+      if (result.reason === 'unavailable') setRefused(result.unavailable)
+      // L'état des jeux fait foi : on le relit, certains viennent peut-être d'être vendus.
       void queryClient.invalidateQueries({ queryKey: ['games'] })
       cart.setCheckingOut(false)
     } catch {
@@ -78,6 +82,8 @@ export function CheckoutPage() {
       cart.setCheckingOut(false)
     }
   }
+
+  const refusedLines = lines.filter((line) => refused.includes(line.id))
 
   if (loaded && lines.length === 0 && !cart.checkingOut) {
     return (
@@ -106,7 +112,28 @@ export function CheckoutPage() {
         {error && (
           <Alert className="border-2 border-ink bg-sun/30">
             <AlertTitle>Commande non enregistrée</AlertTitle>
-            <AlertDescription className="text-foreground">{ERRORS[error]}</AlertDescription>
+            <AlertDescription className="space-y-2 text-foreground">
+              <p>{ERRORS[error]}</p>
+              {refusedLines.length > 0 && (
+                <>
+                  <p>
+                    Jeux concernés : <strong>{refusedLines.map((line) => line.game?.title).join(', ')}</strong>.
+                  </p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      cart.remove(...refused)
+                      setRefused([])
+                      setError(null)
+                    }}
+                  >
+                    Retirer et continuer
+                  </Button>
+                </>
+              )}
+            </AlertDescription>
           </Alert>
         )}
 

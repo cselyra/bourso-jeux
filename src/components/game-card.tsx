@@ -10,7 +10,6 @@ import {
   formatDuration,
   formatPlayers,
   formatPrice,
-  formatRemaining,
 } from '@/lib/games'
 
 const conditionTone: Record<GameCondition, string> = {
@@ -24,13 +23,12 @@ const conditionTone: Record<GameCondition, string> = {
 interface GameCardProps {
   game: Game
   status: VisibleStatus
-  now: number
   inCart: boolean
   onToggleCart: () => void
 }
 
-export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardProps) {
-  const reserved = status === 'reserved'
+export function GameCard({ game, status, inCart, onToggleCart }: GameCardProps) {
+  const sold = status === 'sold'
   // Le prix neuf n'est un argument que s'il est plus élevé que le prix demandé
   const showNewPrice = game.price_new_cents !== null && game.price_new_cents > game.price_cents
 
@@ -38,14 +36,14 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
     <article
       className={cn(
         'group flex h-full flex-col overflow-hidden rounded-xl border-2 border-ink bg-card shadow-box transition duration-200',
-        reserved ? 'shadow-box-sm' : 'hover:-translate-x-0.5 hover:-translate-y-1 hover:shadow-box-lg',
+        sold ? 'shadow-box-sm' : 'hover:-translate-x-0.5 hover:-translate-y-1 hover:shadow-box-lg',
       )}
     >
       <div className="relative h-[19rem] overflow-hidden border-b-2 border-ink bg-paper">
-        <div className={cn('absolute inset-0 transition duration-300', reserved && 'opacity-40')}>
+        <div className={cn('absolute inset-0 transition duration-300', sold && 'opacity-40')}>
           <GameCover game={game} />
         </div>
-        {reserved && (
+        {sold && (
           <span className="stamp absolute bottom-3 left-3 -rotate-6 border-[3px] bg-sun px-2.5 py-1.5 text-sm text-ink">
             Vendu
           </span>
@@ -92,12 +90,8 @@ export function GameCard({ game, status, now, inCart, onToggleCart }: GameCardPr
         )}
 
         <div className="mt-auto pt-1">
-          {reserved ? (
-            <p className="rounded-lg bg-muted px-3 py-2 text-center text-sm text-muted-foreground">
-              Paiement en cours : de nouveau disponible dans{' '}
-              <strong className="font-semibold text-foreground">{formatRemaining(game.reserved_until!, now)}</strong>{" "}
-              s'il n'aboutit pas
-            </p>
+          {sold ? (
+            <p className="rounded-lg bg-muted px-3 py-2.5 text-center text-sm font-medium text-muted-foreground">Ce jeu a trouvé preneur</p>
           ) : (
             <button
               type="button"

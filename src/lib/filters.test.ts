@@ -2,8 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { type Filters, EMPTY_FILTERS, applyFilters, parseFilters, serializeFilters } from '@/lib/filters'
 import type { Game } from '@/lib/games'
 
-const NOW = Date.parse('2026-10-12T12:00:00Z')
-
 function game(title: string, overrides: Partial<Game> = {}): Game {
   return {
     id: title,
@@ -27,23 +25,22 @@ function game(title: string, overrides: Partial<Game> = {}): Game {
 }
 
 const titles = (games: Game[], filters: Partial<Filters> = {}) =>
-  applyFilters(games, { ...EMPTY_FILTERS, ...filters }, NOW).map((g) => g.title)
+  applyFilters(games, { ...EMPTY_FILTERS, ...filters }).map((g) => g.title)
 
 describe('applyFilters', () => {
-  it('ne montre jamais les jeux vendus ou retirés', () => {
-    const games = [game('A'), game('B', { status: 'sold' }), game('C', { status: 'withdrawn' })]
-    expect(titles(games)).toEqual(['A'])
-    expect(titles(games, { statuses: ['available', 'reserved'] })).toEqual(['A'])
+  it('montre les jeux vendus après ceux en vente, et jamais les jeux retirés', () => {
+    const games = [game('A', { status: 'sold' }), game('B'), game('C', { status: 'withdrawn' }), game('D')]
+    expect(titles(games)).toEqual(['B', 'D', 'A'])
   })
 
-  it('filtre par statut et traite une réservation échue comme disponible', () => {
+  it('filtre par statut : « vendu » veut dire payé, un paiement en cours reste « disponible »', () => {
     const games = [
       game('Libre'),
-      game('Tenu', { status: 'reserved', reserved_until: '2026-10-12T13:00:00Z' }),
-      game('Échu', { status: 'reserved', reserved_until: '2026-10-12T11:59:00Z' }),
+      game('Paiement en cours', { status: 'reserved', reserved_until: '2026-10-12T13:00:00Z' }),
+      game('Payé', { status: 'sold' }),
     ]
-    expect(titles(games, { statuses: ['available'] })).toEqual(['Échu', 'Libre'])
-    expect(titles(games, { statuses: ['reserved'] })).toEqual(['Tenu'])
+    expect(titles(games, { statuses: ['available'] })).toEqual(['Libre', 'Paiement en cours'])
+    expect(titles(games, { statuses: ['sold'] })).toEqual(['Payé'])
   })
 
   it('filtre par nombre de joueurs, avec 8 = 8 et plus', () => {
@@ -94,6 +91,6 @@ describe('filtres dans l’URL', () => {
   })
 
   it('ignore les valeurs invalides', () => {
-    expect(parseFilters(new URLSearchParams('joueurs=abc&duree=nimp&tri=x&statut=sold'))).toEqual(EMPTY_FILTERS)
+    expect(parseFilters(new URLSearchParams('joueurs=abc&duree=nimp&tri=x&statut=reserved'))).toEqual(EMPTY_FILTERS)
   })
 })

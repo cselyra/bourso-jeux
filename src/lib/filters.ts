@@ -27,7 +27,7 @@ export const AGES = [4, 6, 8, 10, 12, 14]
 
 export const STATUSES: { value: VisibleStatus; label: string }[] = [
   { value: 'available', label: 'Disponible' },
-  { value: 'reserved', label: 'Vendu' },
+  { value: 'sold', label: 'Vendu' },
 ]
 
 export const SORTS: { value: SortKey; label: string }[] = [
@@ -133,12 +133,13 @@ const comparators: Record<SortKey, (a: Game, b: Game) => number> = {
   duree: (a, b) => a.duration_min - b.duration_min || byTitle(a, b),
 }
 
-// Les jeux vendus ou retirés ne sont jamais renvoyés, quel que soit le filtre.
-export function applyFilters(games: Game[], f: Filters, now: number): Game[] {
+// Les jeux vendus restent visibles, mais après ceux encore en vente.
+export function applyFilters(games: Game[], f: Filters): Game[] {
+  const sold = (game: Game) => Number(game.status === 'sold')
   return games
     .filter((game) => {
-      const status = visibleStatus(game, now)
+      const status = visibleStatus(game)
       return status !== null && matches(game, f, status)
     })
-    .sort(comparators[f.sort])
+    .sort((a, b) => sold(a) - sold(b) || comparators[f.sort](a, b))
 }
