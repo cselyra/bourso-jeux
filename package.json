@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "import": "node scripts/import-games.mjs"
+    "import": "node scripts/import-games.mjs",
+    "export": "node scripts/export-games.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

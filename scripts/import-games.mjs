@@ -214,8 +214,16 @@ if (above.length) console.log(`\nPrix de vente supérieur au prix neuf : ${above
 // Photos : une par titre, partagée par tous ses exemplaires
 console.log('\nPhotos :')
 const images = new Map()
+// Photos déjà hébergées chez nous (fichier issu de `npm run export`) : on garde le fichier tel quel
+const kept = new Map()
+const OWN_STORAGE = '/storage/v1/object/public/games/'
 for (const game of games) {
   if (images.has(game.imageKey)) continue
+  if (game.imageUrl?.includes(OWN_STORAGE)) {
+    kept.set(game.imageKey, decodeURIComponent(game.imageUrl.split(OWN_STORAGE)[1]))
+    images.set(game.imageKey, null)
+    continue
+  }
   if (!game.imageUrl) {
     images.set(game.imageKey, null)
     console.log(`  ✗ ${game.title} : pas de lien`)
@@ -229,7 +237,7 @@ for (const game of games) {
   }
 }
 const found = [...images.values()].filter(Boolean)
-console.log(`  ${found.length}/${images.size} photos récupérées (${Math.round(found.reduce((sum, b) => sum + b.length, 0) / 1024)} Ko au total).`)
+console.log(`  ${found.length} photo(s) téléchargée(s) (${Math.round(found.reduce((sum, b) => sum + b.length, 0) / 1024)} Ko), ${kept.size} déjà hébergée(s) et conservée(s), sur ${images.size} jeux.`)
 
 if (!apply) {
   console.log('\nSimulation terminée, rien n’a été écrit. Ajoutez --apply pour importer.')
@@ -249,7 +257,7 @@ for (const [key, buffer] of images) {
 // `status` et `reserved_until` ne sont pas dans la liste : un jeu réservé ou vendu le reste.
 const rows = games.map(({ imageUrl: _url, imageKey, row: _row, ...game }) => ({
   ...game,
-  ...(images.get(imageKey) ? { image_path: `${imageKey}.webp` } : {}),
+  ...(images.get(imageKey) ? { image_path: `${imageKey}.webp` } : kept.has(imageKey) ? { image_path: kept.get(imageKey) } : {}),
 }))
 // PostgREST exige les mêmes clés sur toutes les lignes d'un envoi : deux lots, avec et sans photo
 for (const batch of [rows.filter((row) => 'image_path' in row), rows.filter((row) => !('image_path' in row))]) {
